@@ -32,19 +32,30 @@ class Perecederos : AppCompatActivity() {
         val sp = getSharedPreferences(sharedP, Context.MODE_PRIVATE)
 
         crearP.setOnClickListener {
-            val editor = sp.edit()
-            editor.putString(codigoP.text.toString() + "precio", precioP.text.toString())
-            editor.putString(codigoP.text.toString() + "descripcion", descripcionP.text.toString())
-            editor.putString(codigoP.text.toString() + "diasV", diasVP.text.toString())
+            if (codigoP.text.isNotEmpty() and descripcionP.text.isNotEmpty() and precioP.text.isNotEmpty() and diasVP.text.isNotEmpty() and nuevoValorP.text.isEmpty()){
+                Toast.makeText(this, "Calcule el nuevo valor antes de continuar", Toast.LENGTH_SHORT).show()
+            }
+            else if (codigoP.text.isNotEmpty() and descripcionP.text.isNotEmpty() and precioP.text.isNotEmpty() and diasVP.text.isNotEmpty() and nuevoValorP.text.isNotEmpty()) {
 
-            editor.apply()
-            Toast.makeText(this, "Datos guardados", Toast.LENGTH_SHORT).show()
-            codigoP.setText("")
-            descripcionP.setText("")
-            precioP.setText("")
-            diasVP.setText("")
+                val editor = sp.edit()
+                editor.putString(codigoP.text.toString() + "precio", precioP.text.toString())
+                editor.putString(codigoP.text.toString() + "descripcion", descripcionP.text.toString())
+                editor.putString(codigoP.text.toString() + "diasV", diasVP.text.toString())
+                editor.putString(codigoP.text.toString() + "nuevoVP", nuevoValorP.text.toString())
+
+                editor.apply()
+                Toast.makeText(this, "Datos guardados", Toast.LENGTH_SHORT).show()
+                codigoP.setText("")
+                descripcionP.setText("")
+                precioP.setText("")
+                diasVP.setText("")
+                nuevoValorP.setText("")
+            }
+            else{ Toast.makeText(this, "Rellene todos los campos", Toast.LENGTH_LONG).show()
+            }
+
         }
-        //(precioP.text.toString().toDouble()/2.0).toString()
+
         calcularNV.setOnClickListener {
             if (diasVP.text.toString()=="3"){
                 nuevoValorP.setText((precioP.text.toString().toDouble()/2.0).toString())}
@@ -52,6 +63,8 @@ class Perecederos : AppCompatActivity() {
                 nuevoValorP.setText((precioP.text.toString().toDouble()/3.0).toString())}
             else if (diasVP.text.toString()=="1"){
                 nuevoValorP.setText((precioP.text.toString().toDouble()/4.0).toString())}
+            else if (diasVP.text.isEmpty()){
+                Toast.makeText(this, "Primero ingrese los días de vencimiento" , Toast.LENGTH_SHORT).show()}
             else {nuevoValorP.setText((precioP.text.toString()))}
         }
 
@@ -59,19 +72,26 @@ class Perecederos : AppCompatActivity() {
             val prec = sp.getString(codigoP.text.toString() + "precio","")
             val des = sp.getString(codigoP.text.toString() + "descripcion","")
             val dias = sp.getString(codigoP.text.toString() + "diasV","")
+            val nuevV = sp.getString(codigoP.text.toString()+"nuevoVP", "")
 
-            if (des!!.isNotEmpty() and prec!!.isNotEmpty() and dias!!.isNotEmpty()){
+            if (des!!.isNotEmpty() and prec!!.isNotEmpty() and dias!!.isNotEmpty() and nuevV!!.isNotEmpty()){
                 descripcionP.setText(des)
                 precioP.setText(prec)
                 diasVP.setText(dias)
+                nuevoValorP.setText(nuevV)
             }
-            else{Toast.makeText(this,"Rellene los campos", Toast.LENGTH_SHORT).show()
+            else if (codigoP.text.isEmpty()){
+                Toast.makeText(this,"Ingrese un código", Toast.LENGTH_LONG).show()
             }
-
+            else if (prec.isEmpty() and des.isEmpty() and dias.isEmpty() and nuevV.isEmpty()){
+                Toast.makeText(this,"Código no reconocido", Toast.LENGTH_LONG).show()
+            }
+            else{Toast.makeText(this, "Hubo un error", Toast.LENGTH_SHORT).show()}
         }
 
-
-
-
     }
+
+
+
+
 }

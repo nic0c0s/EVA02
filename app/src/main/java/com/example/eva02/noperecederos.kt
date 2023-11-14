@@ -28,18 +28,20 @@ class noperecederos : AppCompatActivity() {
         descripcionNP.setText(intent.extras?.getString("DESCRIPCIONX", ""))
 
         crearNP.setOnClickListener {
-            val editor = sp.edit()
-            editor.putString(
-                codigoNP.text.toString() + "descripcionN",
-                descripcionNP.text.toString()
-            )
-            editor.putString(codigoNP.text.toString() + "tipoN", tipoNP.text.toString())
+            if (codigoNP.text.isNotEmpty() and descripcionNP.text.isNotEmpty() and tipoNP.text.isNotEmpty()) {
 
-            editor.apply()
-            Toast.makeText(this, "Datos guardados", Toast.LENGTH_LONG).show()
-            codigoNP.setText("")
-            descripcionNP.setText("")
-            tipoNP.setText("")
+                val editor = sp.edit()
+                editor.putString(codigoNP.text.toString() + "descripcionN", descripcionNP.text.toString())
+                editor.putString(codigoNP.text.toString() + "tipoN", tipoNP.text.toString())
+
+                editor.apply()
+                Toast.makeText(this, "Datos guardados", Toast.LENGTH_LONG).show()
+                codigoNP.setText("")
+                descripcionNP.setText("")
+                tipoNP.setText("")
+            }
+
+            else{Toast.makeText(this, "Rellene los campos", Toast.LENGTH_LONG).show()}
         }
         consultarNP.setOnClickListener {
             val desN = sp.getString(codigoNP.text.toString() + "descripcionN", "")
@@ -50,9 +52,13 @@ class noperecederos : AppCompatActivity() {
                 tipoNP.setText(tipoN)
 
             }
-            else {
-                Toast.makeText(this, "Rellene los campos", Toast.LENGTH_LONG).show()
+            else if (codigoNP.text.isEmpty()){
+                Toast.makeText(this, "Ingrese el código del producto", Toast.LENGTH_LONG).show()
             }
+            else if (desN.isEmpty() and tipoN.isEmpty()){
+                Toast.makeText(this,"Código no reconocido", Toast.LENGTH_LONG).show()
+            }
+            else{Toast.makeText(this, "Hubo un error", Toast.LENGTH_SHORT).show()}
         }
 
 
